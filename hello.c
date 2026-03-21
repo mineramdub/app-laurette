@@ -10,7 +10,7 @@ int main()
 
 	printf("donne moi un calcul <3 : ");
 
-	while (1)
+	while ( c != '=')
 	{
 		if (premiertour)
 		{
@@ -23,11 +23,7 @@ int main()
 			a = resultat;
 		}
 
-		if (c == '=')
-		{
-			printf("%Lf\n", resultat);
-			return 0;
-		}
+	
 
 		if (c != '!')
 		{
@@ -49,6 +45,11 @@ int main()
 			case '/':
 			{
 				resultat = a / b;
+				break;
+			}
+			case '*':
+			{
+				resultat = a * b;
 				break;
 			}
 			case '%':
@@ -99,5 +100,7 @@ int main()
 			}
 		}
 		a = resultat;
+	
 	}
+	printf ("%Lf", resultat);
 }
