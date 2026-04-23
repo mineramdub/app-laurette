@@ -9,6 +9,17 @@ const chapterKeys = {
   ch4: ['svt_ch4_flashcards','svt_ch4_quiz','svt_ch4_trous'],
   ch5: ['svt_ch5_flashcards','svt_ch5_quiz','svt_ch5_trous'],
   ch6: ['svt_ch6_flashcards','svt_ch6_quiz','svt_ch6_trous'],
+  ch7: ['svt_ch7_cours','svt_ch7_flashcards','svt_ch7_trous','svt_ch7_quiz'],
+  ch8: ['svt_ch8_cours','svt_ch8_flashcards','svt_ch8_trous','svt_ch8_quiz'],
+  ch9: ['svt_ch9_cours','svt_ch9_flashcards','svt_ch9_trous','svt_ch9_quiz'],
+  ch10: ['svt_ch10_cours','svt_ch10_flashcards','svt_ch10_trous','svt_ch10_quiz'],
+  ch11: ['svt_ch11_cours','svt_ch11_flashcards','svt_ch11_trous','svt_ch11_quiz'],
+  ch12: ['svt_ch12_cours','svt_ch12_flashcards','svt_ch12_trous','svt_ch12_quiz'],
+  ch13: ['svt_ch13_cours','svt_ch13_flashcards','svt_ch13_trous','svt_ch13_quiz'],
+  ch14: ['svt_ch14_cours','svt_ch14_flashcards','svt_ch14_trous','svt_ch14_quiz'],
+  ch15: ['svt_ch15_cours','svt_ch15_flashcards','svt_ch15_trous','svt_ch15_quiz'],
+  ch16: ['svt_ch16_cours','svt_ch16_flashcards','svt_ch16_trous','svt_ch16_quiz'],
+  ch17: ['svt_ch17_cours','svt_ch17_flashcards','svt_ch17_trous','svt_ch17_quiz'],
 };
 
 export default function SVTIndex() {

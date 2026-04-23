@@ -44,7 +44,12 @@ export default function Chapitre6() {
       </div>
 
       {activeTab === 'cours' && (
-        <CourseContent cours={chapitre6.cours} flashcards={chapitre6.flashcards} />
+        <CourseContent
+          cours={chapitre6.cours}
+          flashcards={chapitre6.flashcards}
+          onMarkRead={() => markDone('svt_ch6_cours')}
+          isRead={isDone('svt_ch6_cours')}
+        />
       )}
 
       {activeTab === 'flashcards' && (

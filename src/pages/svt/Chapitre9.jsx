@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { chapitre1 } from '../../data/svtData';
+import { chapitre9 } from '../../data/svtData';
 import { useProgress } from '../../hooks/useProgress';
 import CourseContent from '../../components/CourseContent';
 import Flashcard from '../../components/Flashcard';
 import TexteTrous from '../../components/TexteTrous';
-import Associations from '../../components/Associations';
+import QuizQuestion from '../../components/QuizQuestion';
 
 const tabs = [
   { id: 'cours', label: '📚 Cours' },
   { id: 'flashcards', label: '🃏 Flashcards' },
   { id: 'trous', label: '✏️ Texte à trous' },
-  { id: 'assoc', label: '🔗 Associations' },
+  { id: 'quiz', label: '🧠 Quiz' },
 ];
 
-export default function Chapitre1() {
+export default function Chapitre9() {
   const [activeTab, setActiveTab] = useState('cours');
   const { isDone, markDone } = useProgress();
 
@@ -23,9 +23,9 @@ export default function Chapitre1() {
       <Link to="/svt" className="back-link">← Retour aux chapitres SVT</Link>
 
       <div className="page-header">
-        <div className="subject-tag">SVT · Chapitre 1</div>
-        <h1>{chapitre1.titre}</h1>
-        <p>ADN, transcription, traduction, mutations et régulation de l'expression génétique.</p>
+        <div className="subject-tag">SVT · Chapitre 9</div>
+        <h1>{chapitre9.titre}</h1>
+        <p>Sélection artificielle, amélioration des plantes, OGM et enjeux de la biodiversité cultivée.</p>
       </div>
 
       <div className="exercise-tabs">
@@ -36,7 +36,7 @@ export default function Chapitre1() {
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
-            {isDone(`svt_ch1_${tab.id}`) && tab.id !== 'cours' && (
+            {isDone(`svt_ch9_${tab.id}`) && tab.id !== 'cours' && (
               <span style={{ marginLeft: '0.4rem', fontSize: '0.7rem' }}>✓</span>
             )}
           </button>
@@ -45,24 +45,21 @@ export default function Chapitre1() {
 
       {activeTab === 'cours' && (
         <CourseContent
-          cours={chapitre1.cours}
-          flashcards={chapitre1.flashcards}
-          onMarkRead={() => markDone('svt_ch1_cours')}
-          isRead={isDone('svt_ch1_cours')}
+          cours={chapitre9.cours}
+          flashcards={chapitre9.flashcards}
+          onMarkRead={() => markDone('svt_ch9_cours')}
+          isRead={isDone('svt_ch9_cours')}
         />
       )}
 
       {activeTab === 'flashcards' && (
         <div className="card">
           <h2 style={{ marginBottom: '0.5rem' }}>🃏 Flashcards</h2>
-          <p style={{ marginBottom: '2rem' }}>Clique sur la carte pour voir la définition.</p>
-          {isDone('svt_ch1_flashcards') && (
-            <div className="encouragement" style={{ marginBottom: '1.5rem' }}>🌿 Tu as déjà parcouru ces flashcards — tu avances bien !</div>
+          <p style={{ marginBottom: '2rem' }}>Swipe à droite si tu sais, à gauche si tu veux revoir.</p>
+          {isDone('svt_ch9_flashcards') && (
+            <div className="encouragement" style={{ marginBottom: '1.5rem' }}>🌿 Tu as déjà parcouru ces flashcards !</div>
           )}
-          <Flashcard
-            cards={chapitre1.flashcards}
-            onComplete={() => markDone('svt_ch1_flashcards')}
-          />
+          <Flashcard cards={chapitre9.flashcards} onComplete={() => markDone('svt_ch9_flashcards')} />
         </div>
       )}
 
@@ -70,27 +67,21 @@ export default function Chapitre1() {
         <div className="card">
           <h2 style={{ marginBottom: '0.5rem' }}>✏️ Texte à trous</h2>
           <p style={{ marginBottom: '2rem' }}>Complète le texte en cliquant sur les mots dans la banque.</p>
-          {isDone('svt_ch1_trous') && (
+          {isDone('svt_ch9_trous') && (
             <div className="encouragement" style={{ marginBottom: '1.5rem' }}>🌿 Tu as déjà réussi cet exercice !</div>
           )}
-          <TexteTrous
-            data={chapitre1.texteTrous}
-            onComplete={() => markDone('svt_ch1_trous')}
-          />
+          <TexteTrous data={chapitre9.texteTrous} onComplete={() => markDone('svt_ch9_trous')} />
         </div>
       )}
 
-      {activeTab === 'assoc' && (
+      {activeTab === 'quiz' && (
         <div className="card">
-          <h2 style={{ marginBottom: '0.5rem' }}>🔗 Associations</h2>
-          <p style={{ marginBottom: '2rem' }}>Associe chaque terme à sa définition ou son processus correspondant.</p>
-          {isDone('svt_ch1_assoc') && (
-            <div className="encouragement" style={{ marginBottom: '1.5rem' }}>🌿 Tu as déjà complété cet exercice !</div>
+          <h2 style={{ marginBottom: '0.5rem' }}>🧠 Quiz</h2>
+          <p style={{ marginBottom: '2rem' }}>Réponds aux questions pour tester tes connaissances.</p>
+          {isDone('svt_ch9_quiz') && (
+            <div className="encouragement" style={{ marginBottom: '1.5rem' }}>🌿 Tu as déjà réussi ce quiz !</div>
           )}
-          <Associations
-            pairs={chapitre1.associations}
-            onComplete={() => markDone('svt_ch1_assoc')}
-          />
+          <QuizQuestion questions={chapitre9.quiz} onComplete={() => markDone('svt_ch9_quiz')} />
         </div>
       )}
     </div>

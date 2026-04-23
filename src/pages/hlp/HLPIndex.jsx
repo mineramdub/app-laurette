@@ -6,8 +6,14 @@ const chapterKeys = {
   'hlp-ch1': ['hlp_ch1_flashcards','hlp_ch1_quiz','hlp_ch1_trous'],
   'hlp-ch2': ['hlp_ch2_flashcards','hlp_ch2_quiz','hlp_ch2_trous'],
   'hlp-ch3': ['hlp_ch3_flashcards','hlp_ch3_quiz','hlp_ch3_trous'],
+  'hlp-ch4': ['hlp_ch4_cours','hlp_ch4_flashcards','hlp_ch4_quiz','hlp_ch4_trous'],
 };
-const chapterRoutes = { 'hlp-ch1':'/hlp/ch1', 'hlp-ch2':'/hlp/ch2', 'hlp-ch3':'/hlp/ch3' };
+const chapterRoutes = {
+  'hlp-ch1':'/hlp/ch1',
+  'hlp-ch2':'/hlp/ch2',
+  'hlp-ch3':'/hlp/ch3',
+  'hlp-ch4':'/hlp/ch4',
+};
 
 export default function HLPIndex() {
   const navigate = useNavigate();

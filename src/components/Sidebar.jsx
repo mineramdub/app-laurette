@@ -12,6 +12,17 @@ const navItems = [
       { to: '/svt/ch4', label: 'Chapitre 4', icon: '·', sub: "De l'œil au cerveau", indent: true },
       { to: '/svt/ch5', label: 'Chapitre 5', icon: '·', sub: 'Écologie & enjeux', indent: true },
       { to: '/svt/ch6', label: 'Chapitre 6', icon: '·', sub: 'Procréation humaine', indent: true },
+      { to: '/svt/ch7', label: 'Chapitre 7', icon: '·', sub: 'Régulation glycémie', indent: true },
+      { to: '/svt/ch8', label: 'Chapitre 8', icon: '·', sub: 'Plantes à fleurs', indent: true },
+      { to: '/svt/ch9', label: 'Chapitre 9', icon: '·', sub: 'Domestication plantes', indent: true },
+      { to: '/svt/ch10', label: 'Chapitre 10', icon: '·', sub: 'Variations climatiques', indent: true },
+      { to: '/svt/ch11', label: 'Chapitre 11', icon: '·', sub: 'Réchauffement climatique', indent: true },
+      { to: '/svt/ch12', label: 'Chapitre 12', icon: '·', sub: 'Histoire géologique', indent: true },
+      { to: '/svt/ch13', label: 'Chapitre 13', icon: '·', sub: 'Contraction musculaire', indent: true },
+      { to: '/svt/ch14', label: 'Chapitre 14', icon: '·', sub: 'Énergie & dopage', indent: true },
+      { to: '/svt/ch15', label: 'Chapitre 15', icon: '·', sub: 'Stress aigu', indent: true },
+      { to: '/svt/ch16', label: 'Chapitre 16', icon: '·', sub: 'Stress chronique', indent: true },
+      { to: '/svt/ch17', label: 'Chapitre 17', icon: '·', sub: 'Cerveau fragile', indent: true },
     ]
   },
   {
@@ -21,6 +32,7 @@ const navItems = [
       { to: '/hlp/ch1', label: 'Chapitre 1', icon: '·', sub: 'Les pouvoirs de la parole', indent: true },
       { to: '/hlp/ch2', label: 'Chapitre 2', icon: '·', sub: 'Représentations du monde', indent: true },
       { to: '/hlp/ch3', label: 'Chapitre 3', icon: '·', sub: 'Histoire et mémoire', indent: true },
+      { to: '/hlp/ch4', label: 'Chapitre 4', icon: '·', sub: 'La recherche de soi', indent: true },
     ]
   },
   {

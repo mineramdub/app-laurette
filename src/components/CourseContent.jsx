@@ -105,7 +105,7 @@ function renderParagraph(text, terms, index) {
   );
 }
 
-export default function CourseContent({ cours, flashcards }) {
+export default function CourseContent({ cours, flashcards, onMarkRead, isRead }) {
   const terms = flashcards ? flashcards.map(f => f.terme) : [];
 
   return (
@@ -147,6 +147,34 @@ export default function CourseContent({ cours, flashcards }) {
           </div>
         );
       })}
+      {onMarkRead && (
+        <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+          <button
+            onClick={onMarkRead}
+            disabled={isRead}
+            style={{
+              padding: '0.75rem 1.5rem',
+              borderRadius: '50px',
+              border: 'none',
+              cursor: isRead ? 'default' : 'pointer',
+              background: isRead ? '#7a9e7e' : '#2b2420',
+              color: '#fff',
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.9rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all .2s ease',
+              boxShadow: isRead ? 'none' : '0 2px 12px rgba(43,36,32,.18)',
+            }}
+          >
+            {isRead
+              ? '✓ Cours lu — pris en compte dans les jeux'
+              : '✓ Marquer ce cours comme lu'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

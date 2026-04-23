@@ -44,7 +44,12 @@ export default function HLPChapitre3() {
       </div>
 
       {activeTab === 'cours' && (
-        <CourseContent cours={chapitre3HLP.cours} flashcards={chapitre3HLP.flashcards} />
+        <CourseContent
+          cours={chapitre3HLP.cours}
+          flashcards={chapitre3HLP.flashcards}
+          onMarkRead={() => markDone('hlp_ch3_cours')}
+          isRead={isDone('hlp_ch3_cours')}
+        />
       )}
 
       {activeTab === 'flashcards' && (
