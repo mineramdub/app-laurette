@@ -16,6 +16,21 @@ function getProgress() {
   catch { return {}; }
 }
 
+function getQuiDitScores() {
+  try { return JSON.parse(localStorage.getItem('laure_quidit_scores') || '{}'); }
+  catch { return {}; }
+}
+
+function saveQuiDitScore(key, count) {
+  const s = getQuiDitScores();
+  s[key] = count;
+  localStorage.setItem('laure_quidit_scores', JSON.stringify(s));
+}
+
+function normalizeAnswer(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
 function filterBank(BANK, progress) {
   const readKeys = Object.keys(BANK).filter(k => progress[k]);
   const pool = readKeys.length > 0
@@ -380,13 +395,42 @@ function GameQuiDit({ onBack }) {
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState(null);
   const [done, setDone] = useState(false);
+  const [scores, setScores] = useState(() => getQuiDitScores());
+  const [textInput, setTextInput] = useState('');
+  const inputRef = useRef(null);
 
   const q = questions[i];
-  const choose = idx => { if (picked !== null) return; setPicked(idx); };
-  const next = () => { if (i+1 >= questions.length) { setDone(true); return; } setI(i+1); setPicked(null); };
-  const correct = picked === q.answer;
+  const qKey = q.thesis.slice(0, 80);
+  const correctCount = scores[qKey] || 0;
+  const isTextMode = correctCount >= 2;
+  const correctAnswer = q.options[q.answer];
 
-  const replay = () => { setI(0); setPicked(null); setDone(false); };
+  const recordCorrect = () => {
+    const next = correctCount + 1;
+    const newScores = { ...scores, [qKey]: next };
+    setScores(newScores);
+    saveQuiDitScore(qKey, next);
+  };
+
+  const choose = idx => {
+    if (picked !== null) return;
+    setPicked(idx);
+    if (idx === q.answer) recordCorrect();
+  };
+
+  const submitText = () => {
+    if (picked !== null || !textInput.trim()) return;
+    const norm = normalizeAnswer(textInput);
+    const normFull = normalizeAnswer(correctAnswer);
+    const normLast = normalizeAnswer(correctAnswer.split(' ').at(-1));
+    const ok = norm === normFull || norm === normLast || (norm.length > 3 && normFull.includes(norm));
+    setPicked(ok ? q.answer : -1);
+    if (ok) recordCorrect();
+  };
+
+  const next = () => { if (i+1 >= questions.length) { setDone(true); return; } setI(i+1); setPicked(null); setTextInput(''); };
+  const correct = picked === q.answer;
+  const replay = () => { setI(0); setPicked(null); setDone(false); setTextInput(''); };
 
   if (done) return <GameDone onBack={onBack} onReplay={replay} title="C'est fini pour cette fois." msg="On reverra ensemble ce qui a coincé. Tu peux y revenir quand tu veux." />;
 
@@ -397,30 +441,77 @@ function GameQuiDit({ onBack }) {
         {noFilter && <ReadNotice/>}
         {/* Citation */}
         <div key={i} style={{ background:LA.cream, borderRadius:20, padding:'20px', boxShadow:'0 2px 14px rgba(43,36,32,.06)', animation:'la-pop .35s cubic-bezier(.2,.8,.3,1)' }}>
-          <div style={{ fontSize:10, color:LA.inkSoft, letterSpacing:.7, textTransform:'uppercase', marginBottom:6 }}>citation</div>
+          <div style={{ fontSize:10, color:LA.inkSoft, letterSpacing:.7, textTransform:'uppercase', marginBottom:6 }}>
+            citation
+            {isTextMode && <span style={{ marginLeft:8, background:LA.yellowDeep, color:LA.ink, borderRadius:6, padding:'1px 7px', fontSize:9, fontWeight:700 }}>✍️ mode écriture</span>}
+          </div>
           <div style={{ fontFamily:'Fraunces, Georgia, serif', fontSize:19, fontStyle:'italic', lineHeight:1.35, letterSpacing:-.2 }}>{q.thesis}</div>
+          {isTextMode && <div style={{ fontSize:10, color:LA.inkSoft, marginTop:8 }}>Tu l'as eu {correctCount} fois — écris directement le nom !</div>}
         </div>
-        {/* Options */}
-        <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-          {q.options.map((opt, idx) => {
-            const reveal = picked !== null, isA = idx===q.answer, isP = idx===picked;
-            let bg=LA.cream, border=LA.line;
-            if (reveal && isA) { bg='#c8e6c8'; border='#98c598'; }
-            else if (reveal && isP && !isA) { bg='#f6c9c4'; border='#e69d95'; }
-            return (
-              <div key={idx} onClick={()=>choose(idx)} style={{
-                background:bg, border:`1.5px solid ${border}`, borderRadius:14,
-                padding:'14px 18px', fontSize:15, fontWeight:500, cursor:reveal?'default':'pointer',
-                display:'flex', alignItems:'center', justifyContent:'space-between',
-                transition:'background .2s, border-color .2s',
-              }}>
-                <span>{opt}</span>
-                {reveal && isA && <span style={{ color:'#3a7a3a' }}>✓</span>}
-                {reveal && isP && !isA && <span style={{ color:'#b24a3e' }}>✗</span>}
+
+        {/* Mode QCM ou écriture */}
+        {isTextMode ? (
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            {picked === null ? (
+              <div style={{ display:'flex', gap:8 }}>
+                <input
+                  ref={inputRef}
+                  autoFocus
+                  value={textInput}
+                  onChange={e => setTextInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && submitText()}
+                  placeholder="Écris le nom du philosophe..."
+                  style={{
+                    flex:1, borderRadius:12, border:`1.5px solid ${LA.line}`,
+                    padding:'14px 16px', fontSize:15, fontFamily:'inherit',
+                    background:'#fff', outline:'none',
+                  }}
+                />
+                <div onClick={submitText} style={{
+                  background:LA.ink, color:LA.cream, borderRadius:12,
+                  padding:'14px 18px', cursor:'pointer', fontWeight:700, fontSize:16,
+                  display:'flex', alignItems:'center',
+                }}>→</div>
               </div>
-            );
-          })}
-        </div>
+            ) : (
+              <div style={{
+                borderRadius:14, padding:'14px 16px',
+                background: correct ? '#c8e6c8' : '#f6c9c4',
+                border: `1.5px solid ${correct ? '#98c598' : '#e69d95'}`,
+                animation:'la-pop .3s ease-out',
+              }}>
+                <div style={{ fontWeight:700, fontSize:15, color: correct ? '#3a7a3a' : '#b24a3e' }}>
+                  {correct ? '✓ ' : '✗ Réponse : '}{correctAnswer}
+                </div>
+                {!correct && textInput && (
+                  <div style={{ fontSize:11.5, color:LA.inkSoft, marginTop:3 }}>Tu as écrit : "{textInput}"</div>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            {q.options.map((opt, idx) => {
+              const reveal = picked !== null, isA = idx===q.answer, isP = idx===picked;
+              let bg=LA.cream, border=LA.line;
+              if (reveal && isA) { bg='#c8e6c8'; border='#98c598'; }
+              else if (reveal && isP && !isA) { bg='#f6c9c4'; border='#e69d95'; }
+              return (
+                <div key={idx} onClick={()=>choose(idx)} style={{
+                  background:bg, border:`1.5px solid ${border}`, borderRadius:14,
+                  padding:'14px 18px', fontSize:15, fontWeight:500, cursor:reveal?'default':'pointer',
+                  display:'flex', alignItems:'center', justifyContent:'space-between',
+                  transition:'background .2s, border-color .2s',
+                }}>
+                  <span>{opt}</span>
+                  {reveal && isA && <span style={{ color:'#3a7a3a' }}>✓</span>}
+                  {reveal && isP && !isA && <span style={{ color:'#b24a3e' }}>✗</span>}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Feedback */}
         {picked !== null && (
           <div style={{ background:LA.cream, borderRadius:14, padding:'14px 16px', animation:'la-pop .3s ease-out', border:`1px solid ${LA.line}` }}>
