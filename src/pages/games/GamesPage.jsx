@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // ── Palette ──────────────────────────────────────────────
 const LA = {
@@ -515,7 +515,8 @@ function GameCellule({ onBack }) {
 // ── Hub principal ─────────────────────────────────────────
 export default function GamesPage() {
   const navigate = useNavigate();
-  const [active, setActive] = useState(null);
+  const location = useLocation();
+  const [active, setActive] = useState(location.state?.game || null);
 
   if (active === 'quidit')    return <GameQuiDit    onBack={() => setActive(null)}/>;
   if (active === 'vraifaux')  return <GameVraiFaux  onBack={() => setActive(null)}/>;

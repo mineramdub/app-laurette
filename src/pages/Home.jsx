@@ -10,10 +10,16 @@ const allKeys = [
   'hlp_ch1_flashcards','hlp_ch1_quiz','hlp_ch1_trous',
   'hlp_ch2_flashcards','hlp_ch2_quiz','hlp_ch2_trous',
   'hlp_ch3_flashcards','hlp_ch3_quiz','hlp_ch3_trous',
+  'philo_conscience_flashcards','philo_conscience_quiz','philo_conscience_trous',
+  'philo_liberte_flashcards','philo_liberte_quiz','philo_liberte_trous',
+  'philo_verite_flashcards','philo_verite_quiz','philo_verite_trous',
+  'philo_etat_flashcards','philo_etat_quiz','philo_etat_trous',
+  'philo_bonheur_flashcards','philo_bonheur_quiz','philo_bonheur_trous',
 ];
 
 const svtKeys = allKeys.filter(k => k.startsWith('svt'));
 const hlpKeys = allKeys.filter(k => k.startsWith('hlp'));
+const philoKeys = allKeys.filter(k => k.startsWith('philo'));
 
 const days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
 const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
@@ -27,10 +33,12 @@ export default function Home() {
 
   const svtDone = countDone(svtKeys);
   const hlpDone = countDone(hlpKeys);
+  const philoDone = countDone(philoKeys);
   const svtPct = Math.round((svtDone / svtKeys.length) * 100);
   const hlpPct = Math.round((hlpDone / hlpKeys.length) * 100);
+  const philoPct = Math.round((philoDone / philoKeys.length) * 100);
 
-  const totalDone = svtDone + hlpDone;
+  const totalDone = svtDone + hlpDone + philoDone;
   const streak = totalDone > 0 ? Math.min(totalDone, 21) : 0;
 
   return (
@@ -67,7 +75,7 @@ export default function Home() {
       }}>
 
         {/* Subject circles */}
-        <div style={{ display:'flex', gap:16, justifyContent:'center', marginTop:4 }}>
+        <div style={{ display:'flex', gap:12, justifyContent:'center', marginTop:4 }}>
           <SubjectCircle
             tone="rose" code="SVT" sub="le vivant" pct={svtPct}
             onClick={() => navigate('/svt')}
@@ -75,6 +83,10 @@ export default function Home() {
           <SubjectCircle
             tone="yellow" code="HLP" sub="la pensée" pct={hlpPct}
             onClick={() => navigate('/hlp')}
+          />
+          <SubjectCircle
+            tone="purple" code="Philo" sub="les notions" pct={philoPct}
+            onClick={() => navigate('/philo')}
           />
         </div>
         <div style={{ fontSize:11, textAlign:'center', color:'#6f5f55' }}>
@@ -85,8 +97,10 @@ export default function Home() {
         <div>
           <SectionLabel>Jeux</SectionLabel>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-            <MiniCard bg="#fbe9a8" icon="💭" title="Qui a dit ça ?" sub="HLP · 3 min" onClick={() => navigate('/jeux')} />
-            <MiniCard bg="#f7c9a8" icon="👑" title="Sauve la princesse" sub="quiz · 6 min" onClick={() => navigate('/jeux')} />
+            <MiniCard bg="#fbe9a8" icon="💭" title="Qui a dit ça ?" sub="HLP · 5 min" onClick={() => navigate('/jeux', { state: { game: 'quidit' } })} />
+            <MiniCard bg="#f4cad2" icon="🔬" title="Vrai ou Faux ?" sub="SVT · 4 min" onClick={() => navigate('/jeux', { state: { game: 'vraifaux' } })} />
+            <MiniCard bg="#f7c9a8" icon="👑" title="Sauve la princesse" sub="quiz · 8 min" onClick={() => navigate('/jeux', { state: { game: 'princesse' } })} />
+            <MiniCard bg="#f9dee2" icon="🧫" title="Puzzle cellule" sub="SVT · 5 min" onClick={() => navigate('/jeux', { state: { game: 'cellule' } })} />
           </div>
         </div>
 
@@ -96,6 +110,7 @@ export default function Home() {
           <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
             <ReviseRow icon="🧬" title="SVT" meta={`${svtKeys.length - svtDone} exercices restants`} accent="#e9a9b6" onClick={() => navigate('/svt')} />
             <ReviseRow icon="📖" title="HLP" meta={`${hlpKeys.length - hlpDone} exercices restants`} accent="#efc84a" onClick={() => navigate('/hlp')} />
+            <ReviseRow icon="🦉" title="Philo" meta={`${philoKeys.length - philoDone} exercices restants`} accent="#c9b8e8" onClick={() => navigate('/philo')} />
             <ReviseRow icon="🎤" title="Grand Oral" meta="Préparer ton sujet" accent="#f7c9a8" onClick={() => navigate('/grand-oral')} />
           </div>
         </div>
@@ -110,12 +125,12 @@ export default function Home() {
 }
 
 function SubjectCircle({ tone, code, sub, pct, onClick }) {
-  const bg   = tone === 'rose' ? '#f4cad2' : '#f7d97a';
-  const deep = tone === 'rose' ? '#e9a9b6' : '#efc84a';
-  const r = 52, c = 56, circ = 2 * Math.PI * r;
+  const bg   = tone === 'rose' ? '#f4cad2' : tone === 'yellow' ? '#f7d97a' : '#c9b8e8';
+  const deep = tone === 'rose' ? '#e9a9b6' : tone === 'yellow' ? '#efc84a' : '#a896d4';
+  const r = 44, c = 48, circ = 2 * Math.PI * r;
   return (
     <div className="la-ring la-tap" onClick={onClick} style={{
-      width:148, height:148, borderRadius:'50%', background:bg,
+      width:124, height:124, borderRadius:'50%', background:bg,
       display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
       position:'relative', boxShadow:`inset 0 -8px 0 ${deep}55`,
     }}>
@@ -126,10 +141,10 @@ function SubjectCircle({ tone, code, sub, pct, onClick }) {
           strokeDasharray={circ} strokeDashoffset={circ * (1 - pct/100)}
           strokeLinecap="round" style={{ transition:'stroke-dashoffset .6s ease' }} />
       </svg>
-      <div style={{ fontFamily:'Fraunces, Georgia, serif', fontSize:34, fontWeight:600, letterSpacing:-0.8, lineHeight:1 }}>{code}</div>
-      <div style={{ fontSize:11, color:'#6f5f55', marginTop:4, fontStyle:'italic' }}>{sub}</div>
+      <div style={{ fontFamily:'Fraunces, Georgia, serif', fontSize:28, fontWeight:600, letterSpacing:-0.8, lineHeight:1 }}>{code}</div>
+      <div style={{ fontSize:10, color:'#6f5f55', marginTop:4, fontStyle:'italic' }}>{sub}</div>
       {pct > 0 && (
-        <div style={{ position:'absolute', bottom:18, fontSize:10, fontWeight:700, color:'rgba(43,36,32,.5)' }}>{pct}%</div>
+        <div style={{ position:'absolute', bottom:14, fontSize:10, fontWeight:700, color:'rgba(43,36,32,.5)' }}>{pct}%</div>
       )}
     </div>
   );
