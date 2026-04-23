@@ -24,6 +24,14 @@ import HLPChapitre1 from './pages/hlp/HLPChapitre1';
 import HLPChapitre2 from './pages/hlp/HLPChapitre2';
 import HLPChapitre3 from './pages/hlp/HLPChapitre3';
 import HLPChapitre4 from './pages/hlp/HLPChapitre4';
+import HLPChapitre5 from './pages/hlp/HLPChapitre5';
+import HLPChapitre6 from './pages/hlp/HLPChapitre6';
+import HLPChapitre7 from './pages/hlp/HLPChapitre7';
+import HLPChapitre8 from './pages/hlp/HLPChapitre8';
+import HLPChapitre9 from './pages/hlp/HLPChapitre9';
+import HLPChapitre10 from './pages/hlp/HLPChapitre10';
+import PhiloIndex from './pages/philo/PhiloIndex';
+import PhiloChapitre from './pages/philo/PhiloChapitre';
 import GrandOralPage from './pages/grandoral/GrandOralPage';
 import GamesPage from './pages/games/GamesPage';
 
@@ -60,6 +68,14 @@ function App() {
             <Route path="/hlp/ch2" element={<HLPChapitre2 />} />
             <Route path="/hlp/ch3" element={<HLPChapitre3 />} />
             <Route path="/hlp/ch4" element={<HLPChapitre4 />} />
+            <Route path="/hlp/ch5" element={<HLPChapitre5 />} />
+            <Route path="/hlp/ch6" element={<HLPChapitre6 />} />
+            <Route path="/hlp/ch7" element={<HLPChapitre7 />} />
+            <Route path="/hlp/ch8" element={<HLPChapitre8 />} />
+            <Route path="/hlp/ch9" element={<HLPChapitre9 />} />
+            <Route path="/hlp/ch10" element={<HLPChapitre10 />} />
+            <Route path="/philo" element={<PhiloIndex />} />
+            <Route path="/philo/:id" element={<PhiloChapitre />} />
             <Route path="/grand-oral" element={<GrandOralPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

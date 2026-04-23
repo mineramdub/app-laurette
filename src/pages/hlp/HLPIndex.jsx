@@ -3,16 +3,22 @@ import { useProgress } from '../../hooks/useProgress';
 import { hlpChapitres } from '../../data/hlpData';
 
 const chapterKeys = {
-  'hlp-ch1': ['hlp_ch1_flashcards','hlp_ch1_quiz','hlp_ch1_trous'],
-  'hlp-ch2': ['hlp_ch2_flashcards','hlp_ch2_quiz','hlp_ch2_trous'],
-  'hlp-ch3': ['hlp_ch3_flashcards','hlp_ch3_quiz','hlp_ch3_trous'],
+  'hlp-ch1': ['hlp_ch1_cours','hlp_ch1_flashcards','hlp_ch1_quiz','hlp_ch1_trous'],
+  'hlp-ch2': ['hlp_ch2_cours','hlp_ch2_flashcards','hlp_ch2_quiz','hlp_ch2_trous'],
+  'hlp-ch3': ['hlp_ch3_cours','hlp_ch3_flashcards','hlp_ch3_quiz','hlp_ch3_trous'],
   'hlp-ch4': ['hlp_ch4_cours','hlp_ch4_flashcards','hlp_ch4_quiz','hlp_ch4_trous'],
+  'hlp-ch5': ['hlp_ch5_cours','hlp_ch5_flashcards','hlp_ch5_quiz','hlp_ch5_trous'],
+  'hlp-ch6': ['hlp_ch6_cours','hlp_ch6_flashcards','hlp_ch6_quiz','hlp_ch6_trous'],
+  'hlp-ch7': ['hlp_ch7_cours','hlp_ch7_flashcards','hlp_ch7_quiz','hlp_ch7_trous'],
+  'hlp-ch8': ['hlp_ch8_cours','hlp_ch8_flashcards','hlp_ch8_quiz','hlp_ch8_trous'],
+  'hlp-ch9': ['hlp_ch9_cours','hlp_ch9_flashcards','hlp_ch9_quiz','hlp_ch9_trous'],
+  'hlp-ch10': ['hlp_ch10_cours','hlp_ch10_flashcards','hlp_ch10_quiz','hlp_ch10_trous'],
 };
 const chapterRoutes = {
-  'hlp-ch1':'/hlp/ch1',
-  'hlp-ch2':'/hlp/ch2',
-  'hlp-ch3':'/hlp/ch3',
-  'hlp-ch4':'/hlp/ch4',
+  'hlp-ch1':'/hlp/ch1', 'hlp-ch2':'/hlp/ch2', 'hlp-ch3':'/hlp/ch3',
+  'hlp-ch4':'/hlp/ch4', 'hlp-ch5':'/hlp/ch5', 'hlp-ch6':'/hlp/ch6',
+  'hlp-ch7':'/hlp/ch7', 'hlp-ch8':'/hlp/ch8', 'hlp-ch9':'/hlp/ch9',
+  'hlp-ch10':'/hlp/ch10',
 };
 
 export default function HLPIndex() {
