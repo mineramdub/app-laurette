@@ -82,7 +82,7 @@ export default function SVTIndex() {
           <QuickTile bg="#f9dee2" icon="🎴" title="Flashcards" sub="toute la matière" onClick={() => navigate('/svt/ch1')} />
           <QuickTile bg="#fbe9a8" icon="🎤" title="Grand Oral" sub="sujets SVT×HLP" onClick={() => navigate('/grand-oral')} />
           <QuickTile bg="#fdf6e9" icon="📄" title="Fiches" sub={`${svtChapitres.length} cours`} border onClick={() => navigate('/svt/ch1')} />
-          <QuickTile bg="#fdf6e9" icon="🎮" title="Jeux" sub="spécial SVT" border onClick={() => navigate('/svt/ch1')} />
+          <QuickTile bg="#fdf6e9" icon="🎮" title="Jeux" sub="spécial SVT" border onClick={() => navigate('/jeux')} />
         </div>
       </div>
     </div>
