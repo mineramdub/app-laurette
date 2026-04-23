@@ -1,4 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#f9dee2"/>
-  <text x="256" y="348" font-family="Georgia, serif" font-size="288" font-weight="600" fill="#2b2420" text-anchor="middle" font-style="italic">L</text>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf6e9"/>
+      <stop offset="100%" stop-color="#f9dee2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+
+  <!-- Decorative sun top-right -->
+  <circle cx="416" cy="100" r="38" fill="#f7d97a"/>
+  <line x1="416" y1="48" x2="416" y2="30" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="416" y1="152" x2="416" y2="170" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="364" y1="100" x2="346" y2="100" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="468" y1="100" x2="486" y2="100" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="379" y1="63" x2="366" y2="50" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="453" y1="137" x2="466" y2="150" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="453" y1="63" x2="466" y2="50" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+  <line x1="379" y1="137" x2="366" y2="150" stroke="#efc84a" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Letter L -->
+  <text x="204" y="374" font-family="Georgia, 'Times New Roman', serif" font-size="294" font-weight="700" fill="#2b2420" text-anchor="middle" font-style="italic">L</text>
+
+  <!-- Small dots decoration -->
+  <circle cx="100" cy="112" r="14" fill="#e9a9b6" opacity="0.7"/>
+  <circle cx="72" cy="155" r="8" fill="#efc84a" opacity="0.6"/>
+  <circle cx="138" cy="82" r="10" fill="#c9b8e8" opacity="0.7"/>
+
+  <!-- Bottom accent line -->
+  <rect x="140" y="415" width="232" height="10" rx="5" fill="#e9a9b6" opacity="0.5"/>
 </svg>
