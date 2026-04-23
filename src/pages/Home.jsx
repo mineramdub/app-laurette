@@ -85,8 +85,10 @@ export default function Home() {
         <div>
           <SectionLabel>Jeux</SectionLabel>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-            <MiniCard bg="#fbe9a8" icon="💭" title="Qui a dit ça ?" sub="HLP · 3 min" onClick={() => navigate('/jeux')} />
-            <MiniCard bg="#f7c9a8" icon="👑" title="Sauve la princesse" sub="quiz · 6 min" onClick={() => navigate('/jeux')} />
+            <MiniCard bg="#f7d97a" icon="💭" title="Qui a dit ça ?" sub="HLP · 5 min" onClick={() => navigate('/jeux')} />
+            <MiniCard bg="#f4cad2" icon="🔬" title="Vrai ou Faux ?" sub="SVT · 4 min" onClick={() => navigate('/jeux')} />
+            <MiniCard bg="#f7c9a8" icon="👑" title="Sauve la princesse" sub="quiz · 8 min" onClick={() => navigate('/jeux')} />
+            <MiniCard bg="#f9dee2" icon="🧫" title="Puzzle de la cellule" sub="SVT · 5 min" onClick={() => navigate('/jeux')} />
           </div>
         </div>
 
