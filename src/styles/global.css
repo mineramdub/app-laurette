@@ -46,6 +46,7 @@
 @keyframes la-fade   { from{opacity:0} to{opacity:1} }
 @keyframes la-fill   { from{width:0%} to{width:var(--w,0%)} }
 @keyframes fadeIn    { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+@keyframes la-slide-up { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
 
 /* ===== INTERACTION UTILITIES ===== */
 .la-tap {

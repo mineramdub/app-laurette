@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { Sidebar, MobileNav } from './components/Sidebar';
 import Home from './pages/Home';
 import SVTIndex from './pages/svt/SVTIndex';
@@ -35,12 +36,101 @@ import PhiloChapitre from './pages/philo/PhiloChapitre';
 import GrandOralPage from './pages/grandoral/GrandOralPage';
 import GamesPage from './pages/games/GamesPage';
 
+function InstallBanner() {
+  const [show, setShow] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIos, setIsIos] = useState(false);
+
+  useEffect(() => {
+    // Ne pas montrer si déjà installée (mode standalone)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    // Ne pas montrer si l'utilisateur a déjà fermé ce mois-ci
+    const dismissed = localStorage.getItem('laure_install_dismissed');
+    if (dismissed && Date.now() - parseInt(dismissed) < 1000 * 60 * 60 * 24 * 30) return;
+
+    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    setIsIos(ios);
+
+    if (ios) {
+      // iOS: montrer le guide manuel après 3s
+      setTimeout(() => setShow(true), 3000);
+    } else {
+      // Android/Chrome: attendre l'événement beforeinstallprompt
+      const handler = (e) => {
+        e.preventDefault();
+        setDeferredPrompt(e);
+        setShow(true);
+      };
+      window.addEventListener('beforeinstallprompt', handler);
+      return () => window.removeEventListener('beforeinstallprompt', handler);
+    }
+  }, []);
+
+  const dismiss = () => {
+    setShow(false);
+    localStorage.setItem('laure_install_dismissed', Date.now().toString());
+  };
+
+  const install = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') setShow(false);
+    setDeferredPrompt(null);
+  };
+
+  if (!show) return null;
+
+  return (
+    <div style={{
+      position:'fixed', bottom:0, left:0, right:0, zIndex:9999,
+      background:'#2b2420', color:'#fdf6e9',
+      padding:'14px 18px 18px',
+      display:'flex', alignItems:'flex-start', gap:12,
+      boxShadow:'0 -4px 20px rgba(0,0,0,.18)',
+      fontFamily:'Inter, sans-serif',
+      animation:'la-slide-up .3s ease-out',
+    }}>
+      <span style={{ fontSize:26, lineHeight:1 }}>📲</span>
+      <div style={{ flex:1 }}>
+        <div style={{ fontWeight:700, fontSize:14, marginBottom:4 }}>Installe l'app !</div>
+        {isIos ? (
+          <div style={{ fontSize:12.5, opacity:.85, lineHeight:1.5 }}>
+            Dans Safari : appuie sur <strong>Partager</strong> (□↑) puis{' '}
+            <strong>« Sur l'écran d'accueil »</strong>
+          </div>
+        ) : (
+          <div style={{ fontSize:12.5, opacity:.85 }}>
+            Accède à tes révisions en un tap, même sans connexion.
+          </div>
+        )}
+        {!isIos && (
+          <button
+            onClick={install}
+            style={{
+              marginTop:10, padding:'8px 18px',
+              background:'#f9dee2', color:'#2b2420',
+              border:'none', borderRadius:999, fontWeight:700, fontSize:13,
+              cursor:'pointer',
+            }}
+          >Installer</button>
+        )}
+      </div>
+      <button onClick={dismiss} style={{ background:'none', border:'none', color:'#fdf6e9', fontSize:20, cursor:'pointer', padding:'0 4px', opacity:.7, lineHeight:1 }}>×</button>
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <div className="app-layout">
         <Sidebar />
         <MobileNav />
+        <InstallBanner />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
