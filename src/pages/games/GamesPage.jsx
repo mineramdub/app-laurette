@@ -360,14 +360,207 @@ const AVENTURE = [
   { scene:'🌡️‍❄️', story:"Un climatologue en parka polaire bloque la station météo.", question:"Quel paramètre de Milankovitch a le cycle le plus long (~100 000 ans) ?", options:["L'obliquité de l'axe terrestre","La précession des équinoxes","L'excentricité de l'orbite terrestre"], answer:2, wrongLine:o=>`"${o} ? Ce cycle-là est plus court que 100 000 ans !"`, rightLine:"\"L'excentricité ! Cycle orbital de ~100 000 ans — le plus long de Milankovitch.\"", explain:"Les trois paramètres de Milankovitch : excentricité orbitale (~100 000 ans), obliquité de l'axe (~41 000 ans), précession (~26 000 ans). Leur combinaison module le rayonnement solaire reçu et explique les glaciations quaternaires.", topic:'SVT · variations climatiques' },
 ];
 
-// ── PARTS for GameCellule ─────────────────────────────────
-const PARTS = [
-  { id:'noyau',        label:'Noyau',          cx:175, cy:138, rx:34, ry:28 },
-  { id:'mitochondrie', label:'Mitochondrie',    cx:88,  cy:100, rx:22, ry:12 },
-  { id:'membrane',     label:'Membrane',        cx:175, cy:36,  rx:20, ry:12 },
-  { id:'ribosome',     label:'Ribosome',        cx:252, cy:182, rx:13, ry:13 },
-  { id:'golgi',        label:'Ap. de Golgi',    cx:126, cy:175, rx:23, ry:12 },
-  { id:'reticulum',    label:'Rétic. endo.',    cx:245, cy:100, rx:22, ry:12 },
+// ── SCHEMAS for Puzzles ───────────────────────────────────
+const SCHEMAS = [
+  {
+    id:'cellule', title:'La cellule eucaryote', chapter:'SVT · Bases', icon:'🧫',
+    color:'#f9dee2', deep:'#e9a9b6', viewBox:'0 0 320 230',
+    parts:[
+      { id:'noyau',        label:'Noyau',             cx:175, cy:138, rx:34, ry:28 },
+      { id:'mitochondrie', label:'Mitochondrie',       cx:88,  cy:100, rx:22, ry:12 },
+      { id:'membrane',     label:'Membrane plasmique', cx:175, cy:36,  rx:20, ry:12 },
+      { id:'ribosome',     label:'Ribosome',           cx:252, cy:182, rx:13, ry:13 },
+      { id:'golgi',        label:'App. de Golgi',      cx:126, cy:175, rx:23, ry:12 },
+      { id:'reticulum',    label:'Réticulum endo.',    cx:245, cy:100, rx:22, ry:12 },
+    ],
+    renderBg:() => (
+      <>
+        <ellipse cx="160" cy="115" rx="148" ry="103" fill="#f9e8e8" stroke="#e9a9b6" strokeWidth="2" strokeDasharray="3 5" opacity=".8"/>
+        <ellipse cx="175" cy="138" rx="36" ry="30" fill="#e9b8b8" opacity=".35"/>
+        <ellipse cx="88" cy="100" rx="22" ry="10" fill="#c89090" transform="rotate(-15 88 100)" opacity=".35"/>
+        <path d="M230 90 Q 250 105 260 95" fill="none" stroke="#c89090" strokeWidth="4" strokeLinecap="round" opacity=".3"/>
+        <path d="M232 100 Q 252 115 262 105" fill="none" stroke="#c89090" strokeWidth="3" strokeLinecap="round" opacity=".25"/>
+        <path d="M108 168 Q 126 162 144 168" fill="none" stroke="#d0a0a0" strokeWidth="3" strokeLinecap="round" opacity=".3"/>
+        <path d="M110 175 Q 126 169 142 175" fill="none" stroke="#d0a0a0" strokeWidth="3" strokeLinecap="round" opacity=".25"/>
+      </>
+    ),
+  },
+  {
+    id:'neurone', title:'Le neurone', chapter:'SVT · Ch. 4', icon:'🧠',
+    color:'#f0e8ff', deep:'#9060c0', viewBox:'0 0 320 200',
+    parts:[
+      { id:'corps',    label:'Corps cellulaire', cx:78,  cy:100, rx:32, ry:28 },
+      { id:'dendrite', label:'Dendrites',        cx:26,  cy:72,  rx:18, ry:14 },
+      { id:'axone',    label:'Axone',            cx:185, cy:100, rx:75, ry:9  },
+      { id:'myeline',  label:'Gaine de myéline', cx:158, cy:86,  rx:22, ry:10 },
+      { id:'noeud',    label:'Nœud de Ranvier',  cx:210, cy:100, rx:6,  ry:12 },
+      { id:'bouton',   label:'Bouton terminal',  cx:292, cy:100, rx:16, ry:16 },
+    ],
+    renderBg:() => (
+      <>
+        <line x1="78" y1="78" x2="30" y2="58" stroke="#c0a0e0" strokeWidth="3" strokeLinecap="round" opacity=".6"/>
+        <line x1="68" y1="80" x2="22" y2="72" stroke="#c0a0e0" strokeWidth="2.5" strokeLinecap="round" opacity=".6"/>
+        <line x1="72" y1="90" x2="18" y2="96" stroke="#c0a0e0" strokeWidth="2.5" strokeLinecap="round" opacity=".5"/>
+        <ellipse cx="78" cy="100" rx="32" ry="28" fill="#ddd0f0" stroke="#9060c0" strokeWidth="1.5" opacity=".6"/>
+        <ellipse cx="78" cy="100" rx="12" ry="10" fill="#b090d8" opacity=".35"/>
+        <line x1="110" y1="100" x2="276" y2="100" stroke="#c0a0e0" strokeWidth="6" strokeLinecap="round" opacity=".55"/>
+        <ellipse cx="142" cy="100" rx="20" ry="9" fill="#f0e8ff" stroke="#9060c0" strokeWidth="1" opacity=".7"/>
+        <ellipse cx="182" cy="100" rx="20" ry="9" fill="#f0e8ff" stroke="#9060c0" strokeWidth="1" opacity=".7"/>
+        <ellipse cx="222" cy="100" rx="20" ry="9" fill="#f0e8ff" stroke="#9060c0" strokeWidth="1" opacity=".7"/>
+        <line x1="162" y1="92" x2="162" y2="108" stroke="#9060c0" strokeWidth="2" opacity=".4"/>
+        <line x1="202" y1="92" x2="202" y2="108" stroke="#9060c0" strokeWidth="2" opacity=".4"/>
+        <circle cx="292" cy="100" r="16" fill="#ddd0f0" stroke="#9060c0" strokeWidth="1.5" opacity=".6"/>
+        <circle cx="288" cy="96" r="3" fill="#c0a0e0" opacity=".4"/>
+        <circle cx="296" cy="103" r="3" fill="#c0a0e0" opacity=".4"/>
+      </>
+    ),
+  },
+  {
+    id:'synapse', title:'La synapse', chapter:'SVT · Ch. 4', icon:'⚡',
+    color:'#f7f0e8', deep:'#d4a060', viewBox:'0 0 320 220',
+    parts:[
+      { id:'neurone_pre',  label:'Neurone pré-syn.',    cx:70,  cy:110, rx:55, ry:38 },
+      { id:'vesicule',     label:'Vésicule synaptique', cx:148, cy:95,  rx:13, ry:13 },
+      { id:'fente',        label:'Fente synaptique',    cx:178, cy:110, rx:8,  ry:28 },
+      { id:'recepteur',    label:'Récepteur',           cx:210, cy:138, rx:16, ry:10 },
+      { id:'neurone_post', label:'Neurone post-syn.',   cx:265, cy:162, rx:42, ry:32 },
+    ],
+    renderBg:() => (
+      <>
+        <ellipse cx="70" cy="110" rx="55" ry="38" fill="#fef3cd" stroke="#efc84a" strokeWidth="1.5" opacity=".6"/>
+        <ellipse cx="142" cy="108" rx="16" ry="20" fill="#fde68a" stroke="#efc84a" strokeWidth="1.5" opacity=".7"/>
+        <circle cx="142" cy="100" r="5" fill="#fef3cd" stroke="#efc84a" strokeWidth="1" opacity=".5"/>
+        <circle cx="150" cy="108" r="5" fill="#fef3cd" stroke="#efc84a" strokeWidth="1" opacity=".5"/>
+        <circle cx="142" cy="116" r="5" fill="#fef3cd" stroke="#efc84a" strokeWidth="1" opacity=".5"/>
+        <rect x="170" y="82" width="16" height="56" rx="2" fill="#e0eef8" opacity=".4"/>
+        <circle cx="178" cy="98" r="3" fill="#efc84a" opacity=".5"/>
+        <circle cx="178" cy="110" r="3" fill="#efc84a" opacity=".5"/>
+        <circle cx="178" cy="122" r="3" fill="#efc84a" opacity=".5"/>
+        <rect x="192" y="130" width="7" height="14" rx="2" fill="#90c0e8" opacity=".4"/>
+        <rect x="203" y="130" width="7" height="14" rx="2" fill="#90c0e8" opacity=".4"/>
+        <ellipse cx="265" cy="162" rx="42" ry="32" fill="#d4edff" stroke="#90c0e8" strokeWidth="1.5" opacity=".6"/>
+      </>
+    ),
+  },
+  {
+    id:'fleur', title:'Structure de la fleur', chapter:'SVT · Ch. 8', icon:'🌸',
+    color:'#fce8f0', deep:'#e9a9b6', viewBox:'0 0 320 240',
+    parts:[
+      { id:'petale',     label:'Pétale',     cx:160, cy:50,  rx:28, ry:20 },
+      { id:'sepale',     label:'Sépale',     cx:88,  cy:128, rx:20, ry:28 },
+      { id:'etamine',    label:'Étamine',    cx:198, cy:112, rx:16, ry:26 },
+      { id:'pistil',     label:'Pistil',     cx:160, cy:118, rx:13, ry:30 },
+      { id:'ovaire',     label:'Ovaire',     cx:160, cy:180, rx:20, ry:16 },
+      { id:'receptacle', label:'Réceptacle', cx:160, cy:210, rx:28, ry:10 },
+    ],
+    renderBg:() => (
+      <>
+        <line x1="160" y1="225" x2="160" y2="190" stroke="#7ab840" strokeWidth="4" strokeLinecap="round"/>
+        <ellipse cx="160" cy="210" rx="28" ry="10" fill="#a0d060" opacity=".4"/>
+        <ellipse cx="160" cy="180" rx="20" ry="16" fill="#f7c9d0" stroke="#e9a9b6" strokeWidth="1.5" opacity=".6"/>
+        <ellipse cx="88" cy="128" rx="20" ry="28" fill="#c0e080" stroke="#7ab840" strokeWidth="1" transform="rotate(-30 88 128)" opacity=".5"/>
+        <ellipse cx="232" cy="128" rx="20" ry="28" fill="#c0e080" stroke="#7ab840" strokeWidth="1" transform="rotate(30 232 128)" opacity=".5"/>
+        <ellipse cx="160" cy="152" rx="18" ry="26" fill="#c0e080" stroke="#7ab840" strokeWidth="1" opacity=".4"/>
+        <ellipse cx="160" cy="50" rx="28" ry="20" fill="#f9b8c8" stroke="#e9a9b6" strokeWidth="1.5" opacity=".7"/>
+        <ellipse cx="100" cy="78" rx="20" ry="28" fill="#f9b8c8" stroke="#e9a9b6" strokeWidth="1.5" transform="rotate(-40 100 78)" opacity=".6"/>
+        <ellipse cx="220" cy="78" rx="20" ry="28" fill="#f9b8c8" stroke="#e9a9b6" strokeWidth="1.5" transform="rotate(40 220 78)" opacity=".6"/>
+        <rect x="155" y="90" width="10" height="92" rx="5" fill="#f7a0b0" stroke="#e9a9b6" strokeWidth="1" opacity=".5"/>
+        <line x1="185" y1="168" x2="196" y2="88" stroke="#d4a000" strokeWidth="2" strokeLinecap="round" opacity=".6"/>
+        <ellipse cx="196" cy="86" rx="5" ry="3" fill="#f7d97a" stroke="#efc84a" strokeWidth="1" opacity=".8"/>
+        <line x1="205" y1="166" x2="218" y2="92" stroke="#d4a000" strokeWidth="2" strokeLinecap="round" opacity=".5"/>
+        <ellipse cx="218" cy="90" rx="5" ry="3" fill="#f7d97a" stroke="#efc84a" strokeWidth="1" opacity=".8"/>
+      </>
+    ),
+  },
+  {
+    id:'sarcomere', title:'Le sarcomère', chapter:'SVT · Ch. 13', icon:'💪',
+    color:'#fde8d8', deep:'#d98b5e', viewBox:'0 0 320 200',
+    parts:[
+      { id:'ligne_z',  label:'Ligne Z',             cx:47,  cy:100, rx:7,  ry:55 },
+      { id:'actine',   label:"Filament d'actine",   cx:100, cy:80,  rx:38, ry:9  },
+      { id:'myosine',  label:'Filament de myosine', cx:160, cy:100, rx:52, ry:11 },
+      { id:'zone_h',   label:'Zone H',              cx:160, cy:100, rx:20, ry:28 },
+      { id:'bande_a',  label:'Bande A',             cx:160, cy:138, rx:52, ry:12 },
+      { id:'bande_i',  label:'Bande I',             cx:54,  cy:138, rx:20, ry:12 },
+    ],
+    renderBg:() => (
+      <>
+        <line x1="47" y1="45" x2="47" y2="155" stroke="#d98b5e" strokeWidth="4" strokeLinecap="round" opacity=".7"/>
+        <line x1="273" y1="45" x2="273" y2="155" stroke="#d98b5e" strokeWidth="4" strokeLinecap="round" opacity=".7"/>
+        <rect x="52" y="74" width="76" height="8" rx="4" fill="#f4b080" opacity=".6"/>
+        <rect x="52" y="118" width="76" height="8" rx="4" fill="#f4b080" opacity=".6"/>
+        <rect x="192" y="74" width="76" height="8" rx="4" fill="#f4b080" opacity=".6"/>
+        <rect x="192" y="118" width="76" height="8" rx="4" fill="#f4b080" opacity=".6"/>
+        <rect x="105" y="88" width="110" height="24" rx="8" fill="#c07840" opacity=".45"/>
+        <circle cx="120" cy="88" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="140" cy="88" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="160" cy="88" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="180" cy="88" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="200" cy="112" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="180" cy="112" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="160" cy="112" r="4" fill="#d98b5e" opacity=".5"/>
+        <circle cx="140" cy="112" r="4" fill="#d98b5e" opacity=".5"/>
+        <rect x="103" y="128" width="114" height="5" rx="2" fill="#d98b5e" opacity=".25"/>
+        <rect x="48" y="128" width="48" height="5" rx="2" fill="#f4b080" opacity=".25"/>
+        <rect x="224" y="128" width="48" height="5" rx="2" fill="#f4b080" opacity=".25"/>
+      </>
+    ),
+  },
+  {
+    id:'effet_serre', title:"L'effet de serre", chapter:'SVT · Ch. 11', icon:'🌡️',
+    color:'#e8f0ff', deep:'#6090d0', viewBox:'0 0 320 230',
+    parts:[
+      { id:'soleil',     label:'Soleil',                cx:262, cy:40,  rx:26, ry:26  },
+      { id:'atmosphere', label:'Atmosphère',             cx:160, cy:78,  rx:138,ry:20  },
+      { id:'gaz_serre',  label:'Gaz à effet de serre',  cx:160, cy:125, rx:58, ry:18  },
+      { id:'rayt_ir',    label:'Rayonnement IR renvoyé', cx:68,  cy:155, rx:28, ry:17  },
+      { id:'surface',    label:'Surface terrestre',      cx:160, cy:198, rx:138,ry:18  },
+    ],
+    renderBg:() => (
+      <>
+        <circle cx="262" cy="40" r="24" fill="#ffd700" opacity=".7"/>
+        <line x1="262" y1="10" x2="262" y2="4"   stroke="#ffd700" strokeWidth="2" opacity=".5"/>
+        <line x1="288" y1="18" x2="294" y2="12"  stroke="#ffd700" strokeWidth="2" opacity=".5"/>
+        <line x1="295" y1="40" x2="301" y2="40"  stroke="#ffd700" strokeWidth="2" opacity=".5"/>
+        <line x1="288" y1="62" x2="294" y2="68"  stroke="#ffd700" strokeWidth="2" opacity=".5"/>
+        <line x1="240" y1="62" x2="195" y2="98"  stroke="#ffd700" strokeWidth="2" strokeDasharray="4 2" opacity=".6"/>
+        <polygon points="192,101 198,91 204,100" fill="#ffd700" opacity=".6"/>
+        <rect x="22" y="60" width="276" height="36" rx="10" fill="#c8e8ff" stroke="#90b8e0" strokeWidth="1" opacity=".5"/>
+        <ellipse cx="160" cy="125" rx="62" ry="20" fill="#a0c8a0" stroke="#60a060" strokeWidth="1" opacity=".4"/>
+        <text x="122" y="123" fontSize="7.5" fill="#60a060" fontFamily="Inter, sans-serif" opacity=".7">CO₂ · CH₄ · H₂O</text>
+        <line x1="152" y1="143" x2="70" y2="140"  stroke="#ff6040" strokeWidth="2" strokeDasharray="4 2" opacity=".6"/>
+        <polygon points="67,138 77,134 77,144" fill="#ff6040" opacity=".6"/>
+        <line x1="160" y1="180" x2="160" y2="146" stroke="#ff6040" strokeWidth="1.5" strokeDasharray="3 2" opacity=".5"/>
+        <rect x="22" y="182" width="276" height="30" rx="8" fill="#90c060" stroke="#60a030" strokeWidth="1.5" opacity=".6"/>
+      </>
+    ),
+  },
+  {
+    id:'tectonique', title:'Tectonique des plaques', chapter:'SVT · Ch. 12', icon:'🌋',
+    color:'#f0e8d8', deep:'#a08060', viewBox:'0 0 320 230',
+    parts:[
+      { id:'plaque_cont', label:'Plaque continentale', cx:72,  cy:90,  rx:55, ry:28 },
+      { id:'plaque_oce',  label:'Plaque océanique',    cx:232, cy:102, rx:55, ry:22 },
+      { id:'subduction',  label:'Zone de subduction',  cx:148, cy:148, rx:28, ry:20 },
+      { id:'dorsale',     label:'Dorsale océanique',   cx:268, cy:162, rx:26, ry:22 },
+      { id:'manteau',     label:'Manteau',             cx:160, cy:198, rx:98, ry:20 },
+    ],
+    renderBg:() => (
+      <>
+        <rect x="12" y="178" width="296" height="40" rx="8" fill="#c8a070" opacity=".5"/>
+        <rect x="12" y="55"  width="296" height="30" rx="5" fill="#90c8e8" opacity=".35"/>
+        <path d="M12 92 Q 62 62 132 90 L 132 178 L 12 178 Z"   fill="#d4b890" stroke="#a08060" strokeWidth="1.5" opacity=".6"/>
+        <path d="M132 90 Q 188 68 308 78 L 308 178 L 132 178 Z" fill="#90b0c8" stroke="#607090" strokeWidth="1.5" opacity=".6"/>
+        <path d="M132 90 Q 142 132 132 178" fill="none" stroke="#a08060" strokeWidth="3" strokeLinecap="round" opacity=".6"/>
+        <path d="M270 78 L 260 55 L 280 55 Z" fill="#d0a060" opacity=".5"/>
+        <path d="M270 55 L 264 38 L 276 38 Z" fill="#e0b070" opacity=".4"/>
+        <line x1="82"  y1="92"  x2="128" y2="105" stroke="#a08060" strokeWidth="1.5" strokeDasharray="4 2" opacity=".5"/>
+        <line x1="218" y1="94"  x2="172" y2="108" stroke="#607090" strokeWidth="1.5" strokeDasharray="4 2" opacity=".5"/>
+        <circle cx="268" cy="162" r="20" fill="#e87040" opacity=".18"/>
+        <circle cx="268" cy="162" r="10" fill="#e87040" opacity=".28"/>
+      </>
+    ),
+  },
 ];
 
 // ── GAMES hub data ────────────────────────────────────────
@@ -375,7 +568,7 @@ const GAMES = [
   { id:'quidit',    title:'Qui a dit ça ?',       sub:'HLP · philosophes & citations',     icon:'💭', bg:'#f7d97a', deep:'#efc84a', mins:'5 min', tag:'HLP' },
   { id:'vraifaux',  title:'Vrai ou Faux ?',        sub:'SVT · teste tes connaissances',     icon:'🔬', bg:'#f4cad2', deep:'#e9a9b6', mins:'4 min', tag:'SVT' },
   { id:'princesse', title:'Sauve la princesse',    sub:'quiz mixte · aventure narrative',   icon:'👑', bg:'#f7c9a8', deep:'#d98b5e', mins:'8 min', tag:'MIX' },
-  { id:'cellule',   title:'Puzzle de la cellule',  sub:'SVT · identifie les organites',     icon:'🧫', bg:'#f9dee2', deep:'#e9a9b6', mins:'5 min', tag:'SVT' },
+  { id:'cellule',   title:'Puzzles de schémas',     sub:'SVT · 7 schémas à reconstituer',    icon:'🧫', bg:'#f9dee2', deep:'#e9a9b6', mins:'5 min', tag:'SVT' },
 ];
 
 const OK = ['Yes, bien joué !','Exactement ✨','Tu maîtrises !','Pile dedans.'];
@@ -727,12 +920,12 @@ function GamePrincesse({ onBack }) {
   );
 }
 
-// ── Jeu 4 : Puzzle de la cellule (click-to-select) ────────
-function GameCellule({ onBack }) {
+// ── Puzzle de schéma (générique) ──────────────────────────
+function SchemaPuzzle({ schema, onBack }) {
   const [placed, setPlaced] = useState({});
-  const [pool, setPool] = useState(() => [...PARTS].sort(() => Math.random() - .5));
-  const [selected, setSelected] = useState(null); // id string or null
-  const [msg, setMsg] = useState(null); // { ok: bool, text: string } | null
+  const [pool, setPool] = useState(() => [...schema.parts].sort(() => Math.random() - .5));
+  const [selected, setSelected] = useState(null);
+  const [msg, setMsg] = useState(null);
   const [done, setDone] = useState(false);
 
   const handleLabelClick = (partId) => {
@@ -742,54 +935,37 @@ function GameCellule({ onBack }) {
   };
 
   const handleZoneClick = (zone) => {
-    if (placed[zone.id]) return;
-    if (selected === null) return;
-
+    if (placed[zone.id] || selected === null) return;
     if (selected === zone.id) {
-      // Correct match
       const next = { ...placed, [zone.id]: true };
       setPlaced(next);
       setPool(p => p.filter(x => x.id !== zone.id));
       setSelected(null);
-      setMsg({ ok: true, text: `${PARTS.find(p => p.id === zone.id)?.label} ✓` });
-      if (Object.keys(next).length >= PARTS.length) setTimeout(() => setDone(true), 700);
+      setMsg({ ok: true, text: `${schema.parts.find(p => p.id === zone.id)?.label} ✓` });
+      if (Object.keys(next).length >= schema.parts.length) setTimeout(() => setDone(true), 700);
     } else {
-      // Wrong match
-      const selectedLabel = PARTS.find(p => p.id === selected)?.label || '';
+      const selectedLabel = schema.parts.find(p => p.id === selected)?.label || '';
       setMsg({ ok: false, text: `Ce n'est pas ${selectedLabel.toLowerCase()} ici.` });
     }
     setTimeout(() => setMsg(null), 2200);
   };
 
-  const replay = () => { setPlaced({}); setPool([...PARTS].sort(() => Math.random() - .5)); setSelected(null); setMsg(null); setDone(false); };
+  const replay = () => { setPlaced({}); setPool([...schema.parts].sort(() => Math.random() - .5)); setSelected(null); setMsg(null); setDone(false); };
 
-  if (done) return <GameDone onBack={onBack} onReplay={replay} title="Bravo, tu l'as montée !" msg="Tu as reconstruit la cellule. Tu peux rejouer pour ancrer." />;
+  if (done) return <GameDone onBack={onBack} onReplay={replay} title="Schéma complété !" msg="Tu as identifié toutes les structures. Rejoue pour ancrer." />;
 
   const instructionText = selected === null
     ? 'Clique sur une étiquette pour la sélectionner'
-    : '→ Clique sur la zone correspondante dans la cellule';
+    : '→ Clique sur la zone correspondante dans le schéma';
 
   return (
-    <div style={{ display:'flex', flexDirection:'column', minHeight:'80vh', background:LA.rose, borderRadius:24, overflow:'hidden', animation:'la-in-right .28s ease-out' }}>
-      <GameHeader onBack={onBack} title="Puzzle de la cellule" step={Object.keys(placed).length} total={PARTS.length} deep={LA.roseDeep}/>
+    <div style={{ display:'flex', flexDirection:'column', minHeight:'80vh', background:schema.color, borderRadius:24, overflow:'hidden', animation:'la-in-right .28s ease-out' }}>
+      <GameHeader onBack={onBack} title={schema.title} step={Object.keys(placed).length} total={schema.parts.length} deep={schema.deep}/>
       <div style={{ flex:1, padding:'16px 18px', display:'flex', flexDirection:'column', gap:12, background:LA.roseSoft, borderTopLeftRadius:24, borderTopRightRadius:24, marginTop:-10 }}>
-        {/* SVG Cell */}
         <div style={{ background:LA.cream, borderRadius:16, padding:10 }}>
-          <svg viewBox="0 0 320 230" width="100%" height="220" style={{ display:'block' }}>
-            {/* Cell body */}
-            <ellipse cx="160" cy="115" rx="148" ry="103" fill="#f9e8e8" stroke={LA.roseDeep} strokeWidth="2" strokeDasharray="3 5" opacity=".8"/>
-            {/* Decorative nucleus shadow */}
-            <ellipse cx="175" cy="138" rx="36" ry="30" fill="#e9b8b8" opacity=".35"/>
-            {/* Decorative mitochondria shape */}
-            <ellipse cx="88" cy="100" rx="22" ry="10" fill="#c89090" transform="rotate(-15 88 100)" opacity=".35"/>
-            {/* Decorative ER lines */}
-            <path d="M230 90 Q 250 105 260 95" fill="none" stroke="#c89090" strokeWidth="4" strokeLinecap="round" opacity=".3"/>
-            <path d="M232 100 Q 252 115 262 105" fill="none" stroke="#c89090" strokeWidth="3" strokeLinecap="round" opacity=".25"/>
-            {/* Decorative Golgi stacks */}
-            <path d="M108 168 Q 126 162 144 168" fill="none" stroke="#d0a0a0" strokeWidth="3" strokeLinecap="round" opacity=".3"/>
-            <path d="M110 175 Q 126 169 142 175" fill="none" stroke="#d0a0a0" strokeWidth="3" strokeLinecap="round" opacity=".25"/>
-            {/* Zone ellipses */}
-            {PARTS.map(z => {
+          <svg viewBox={schema.viewBox} width="100%" style={{ display:'block', maxHeight:220 }}>
+            {schema.renderBg()}
+            {schema.parts.map(z => {
               const isPlaced = placed[z.id];
               const isDropTarget = selected !== null && !isPlaced;
               return (
@@ -810,13 +986,10 @@ function GameCellule({ onBack }) {
             })}
           </svg>
         </div>
-        {/* Message */}
         {msg && (
           <div style={{ padding:'8px 12px', borderRadius:10, fontSize:12.5, fontWeight:500, background:msg.ok?'#d9edd9':'#f6d6d1', color:msg.ok?'#3a7a3a':'#b24a3e', animation:'la-pop .3s ease-out' }}>{msg.text}</div>
         )}
-        {/* Instruction */}
         <div style={{ fontSize:11, color:LA.inkSoft, letterSpacing:.4, fontStyle:'italic' }}>{instructionText}</div>
-        {/* Pool labels */}
         <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
           {pool.map(p => {
             const isSelected = selected === p.id;
@@ -841,6 +1014,46 @@ function GameCellule({ onBack }) {
         {pool.length === 0 && (
           <div style={{ marginTop:'auto' }}><GameNextBtn onClick={() => setDone(true)} last/></div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── Jeu 4 : Hub puzzles de schémas SVT ────────────────────
+function GameCellule({ onBack }) {
+  const [activeSchema, setActiveSchema] = useState(null);
+
+  if (activeSchema) {
+    return <SchemaPuzzle schema={activeSchema} onBack={() => setActiveSchema(null)}/>;
+  }
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', minHeight:'80vh', background:LA.rose, borderRadius:24, overflow:'hidden', animation:'la-in-right .28s ease-out' }}>
+      <div style={{ padding:'16px 18px 10px', display:'flex', alignItems:'center', gap:12 }}>
+        <button onClick={onBack} style={{ background:'none', border:'none', fontSize:22, cursor:'pointer', padding:'4px 8px', borderRadius:8, color:LA.ink, lineHeight:1 }}>←</button>
+        <span style={{ fontWeight:700, fontSize:17, color:LA.ink, fontFamily:'Fraunces, Georgia, serif', fontStyle:'italic' }}>Puzzles de schémas</span>
+      </div>
+      <div style={{ flex:1, padding:'8px 18px 24px', display:'flex', flexDirection:'column', gap:10, background:LA.roseSoft, borderTopLeftRadius:24, borderTopRightRadius:24, marginTop:-4, overflowY:'auto' }}>
+        <p style={{ margin:'8px 0 4px', fontSize:13, color:LA.inkSoft, fontStyle:'italic' }}>Choisis un schéma SVT à reconstituer :</p>
+        {SCHEMAS.map(s => (
+          <div
+            key={s.id}
+            onClick={() => setActiveSchema(s)}
+            style={{
+              background:s.color, borderRadius:16, padding:'14px 16px',
+              display:'flex', alignItems:'center', gap:14,
+              cursor:'pointer', boxShadow:`0 3px 0 ${s.deep}55`,
+              userSelect:'none',
+            }}
+          >
+            <span style={{ fontSize:26 }}>{s.icon}</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontWeight:700, fontSize:14.5, color:LA.ink }}>{s.title}</div>
+              <div style={{ fontSize:11, color:LA.inkSoft, marginTop:2 }}>{s.chapter} · {s.parts.length} structures</div>
+            </div>
+            <span style={{ fontSize:20, color:s.deep, opacity:.7 }}>›</span>
+          </div>
+        ))}
       </div>
     </div>
   );
