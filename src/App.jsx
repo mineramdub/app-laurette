@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Sidebar, MobileNav } from './components/Sidebar';
+import { Sidebar } from './components/Sidebar';
+import { BottomNav } from './components/BottomNav';
 import Home from './pages/Home';
 import SVTIndex from './pages/svt/SVTIndex';
 import Chapitre1 from './pages/svt/Chapitre1';
@@ -129,7 +130,7 @@ function App() {
     <BrowserRouter>
       <div className="app-layout">
         <Sidebar />
-        <MobileNav />
+        <BottomNav />
         <InstallBanner />
         <main className="main-content">
           <Routes>
