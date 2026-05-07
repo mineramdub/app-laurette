@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const SECTION_COLORS = [
   { border: '#c17c56', bg: '#fdf6f1', icon: '🔬' },
   { border: '#7a9e7e', bg: '#f4f9f4', icon: '📖' },
@@ -105,13 +107,88 @@ function renderParagraph(text, terms, index) {
   );
 }
 
+const MODES = [
+  { id: '5min',  label: '⚡ 5 min',  desc: 'Points essentiels' },
+  { id: '30min', label: '📖 30 min', desc: 'L\'essentiel' },
+  { id: '3h',    label: '🎓 3 h',   desc: 'Cours complet' },
+];
+
+function filterContent(contenu, mode) {
+  if (mode === '3h') return contenu;
+  if (mode === '5min') {
+    // Only show "Points clés" paragraphs; if none, show just the first paragraph
+    const cles = contenu.filter(p => p.startsWith('Points clés'));
+    return cles.length > 0 ? cles : contenu.slice(0, 1);
+  }
+  // 30min: show first 3 paragraphs, always include "Points clés" if present after that
+  const base = contenu.slice(0, 3);
+  const cles = contenu.filter(p => p.startsWith('Points clés'));
+  if (cles.length > 0 && !base.some(p => p.startsWith('Points clés'))) {
+    return [...base, ...cles];
+  }
+  return base;
+}
+
 export default function CourseContent({ cours, flashcards, onMarkRead, isRead }) {
+  const [mode, setMode] = useState(() => {
+    try { return localStorage.getItem('laure_cours_mode') || '3h'; } catch { return '3h'; }
+  });
   const terms = flashcards ? flashcards.map(f => f.terme) : [];
+
+  const changeMode = (m) => {
+    setMode(m);
+    try { localStorage.setItem('laure_cours_mode', m); } catch {}
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+      {/* Mode picker */}
+      <div style={{
+        display: 'flex', gap: 8, padding: '4px',
+        background: '#f0e8df', borderRadius: 16,
+        alignSelf: 'stretch',
+      }}>
+        {MODES.map(m => (
+          <button
+            key={m.id}
+            onClick={() => changeMode(m.id)}
+            style={{
+              flex: 1, border: 'none', cursor: 'pointer',
+              borderRadius: 12, padding: '10px 6px',
+              background: mode === m.id ? '#2b2420' : 'transparent',
+              color: mode === m.id ? '#fdf6e9' : '#6f5f55',
+              fontFamily: 'var(--font-body)',
+              fontWeight: mode === m.id ? 700 : 500,
+              fontSize: '0.82rem',
+              lineHeight: 1.3,
+              transition: 'all .2s ease',
+              boxShadow: mode === m.id ? '0 2px 8px rgba(43,36,32,.2)' : 'none',
+            }}
+          >
+            <div>{m.label}</div>
+            <div style={{ fontSize: '0.68rem', opacity: 0.8, marginTop: 2 }}>{m.desc}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Mode badge */}
+      {mode !== '3h' && (
+        <div style={{
+          background: mode === '5min' ? '#fbe9a8' : '#f9dee2',
+          border: `1px solid ${mode === '5min' ? '#efc84a' : '#e9a9b6'}`,
+          borderRadius: 10, padding: '8px 14px',
+          fontSize: '0.82rem', color: '#6f5f55', lineHeight: 1.5,
+        }}>
+          {mode === '5min'
+            ? '⚡ Mode synthèse — seuls les points clés de chaque partie sont affichés.'
+            : '📖 Mode intermédiaire — les paragraphes essentiels sont affichés. Passe en 3h pour le cours complet.'}
+        </div>
+      )}
+
       {cours.sections.map((section, i) => {
         const color = SECTION_COLORS[i % SECTION_COLORS.length];
+        const visibleContent = filterContent(section.contenu, mode);
         return (
           <div key={i} style={{
             background: color.bg,
@@ -142,7 +219,7 @@ export default function CourseContent({ cours, flashcards, onMarkRead, isRead })
 
             {/* Content */}
             <div>
-              {section.contenu.map((para, j) => renderParagraph(para, terms, j))}
+              {visibleContent.map((para, j) => renderParagraph(para, terms, j))}
             </div>
           </div>
         );
