@@ -247,7 +247,8 @@ function AnswerInput({ stage, accent, onCorrect }) {
                 autoGrow(e.target)
               }}
               onKeyDown={e => e.key === 'Enter' && e.metaKey && checkAnswer()}
-              placeholder="Une réponse par ligne — Cmd+Entrée pour valider"
+              placeholder="Une réponse par ligne"
+              enterKeyHint="enter"
               rows={5}
               className="w-full px-4 py-3 rounded-xl outline-none mono text-sm transition-all duration-200"
               style={{
@@ -260,7 +261,7 @@ function AnswerInput({ stage, accent, onCorrect }) {
               }}
             />
             <p className="mono text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.18)' }}>
-              Entrée = nouvelle ligne · Cmd+Entrée = valider
+              Entrée = nouvelle ligne · bouton Valider pour soumettre
             </p>
           </>
         ) : (
