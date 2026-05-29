@@ -163,33 +163,52 @@ function ConceptCard({ concept, accent }) {
    ════════════════════════════════════════════ */
 function AnswerInput({ stage, accent, onCorrect }) {
   const [value, setValue] = useState('')
-  const [status, setStatus] = useState('idle') // idle | correct | wrong
+  const [status, setStatus] = useState('idle')
   const [tries, setTries] = useState(0)
+  const textareaRef = useRef(null)
 
-  const normalize = s => s.trim().toLowerCase().replace(/\s+/g, ' ')
+  // Normalize a single line: trim, lowercase, collapse spaces/tabs (NOT newlines)
+  const normalizeLine = s => s.trim().toLowerCase().replace(/[ \t]+/g, ' ')
+
+  const isMultiline = stage.answer.includes('\n') || stage.answerLabel?.includes('ligne')
+
+  const autoGrow = (el) => {
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = Math.min(el.scrollHeight, 360) + 'px'
+  }
 
   const checkAnswer = () => {
-    const v = normalize(value)
-    const expected = normalize(stage.answer)
-
-    // Accept empty answers if flagged
-    if (stage.acceptEmpty && v === '') {
+    // Empty answer — only valid when stage explicitly allows it
+    if (stage.acceptEmpty && value.trim() === '') {
       setStatus('correct')
       setTimeout(() => onCorrect(), 900)
       return
     }
 
-    // Multi-line answers: normalize each line
-    const vLines = v.split('\n').map(l => l.trim()).filter(Boolean).join('\n')
-    const eLines = expected.split('\n').map(l => l.trim()).filter(Boolean).join('\n')
+    if (isMultiline) {
+      // Split on newlines FIRST, then normalize each line independently
+      const vLines = value.split('\n').map(normalizeLine).filter(Boolean)
+      const eLines = stage.answer.split('\n').map(normalizeLine).filter(Boolean)
+      // All expected lines must appear somewhere in the user's lines
+      const allPresent = eLines.every(el =>
+        vLines.some(vl => vl === el || vl.includes(el))
+      )
+      if (allPresent) {
+        setStatus('correct')
+        setTimeout(() => onCorrect(), 900)
+      } else {
+        setStatus('wrong')
+        setTries(t => t + 1)
+        setTimeout(() => setStatus('idle'), 1500)
+      }
+      return
+    }
 
-    // Also accept partial matches for multi-line answers (all lines must be present)
-    const allPresent = expected.split('\n')
-      .map(l => l.trim().toLowerCase())
-      .filter(Boolean)
-      .every(line => v.includes(line))
-
-    if (vLines === eLines || allPresent) {
+    // Single-line answer
+    const v = normalizeLine(value)
+    const expected = normalizeLine(stage.answer)
+    if (v === expected) {
       setStatus('correct')
       setTimeout(() => onCorrect(), 900)
     } else {
@@ -211,8 +230,6 @@ function AnswerInput({ stage, accent, onCorrect }) {
     ? 'rgba(239,68,68,0.05)'
     : 'rgba(255,255,255,0.03)'
 
-  const isMultiline = stage.answer.includes('\n') || stage.answerLabel?.includes('ligne')
-
   return (
     <div className="space-y-3">
       <div>
@@ -220,19 +237,32 @@ function AnswerInput({ stage, accent, onCorrect }) {
           {stage.answerLabel || 'Ta réponse'}
         </label>
         {isMultiline ? (
-          <textarea
-            value={value}
-            onChange={e => { setValue(e.target.value); setStatus('idle') }}
-            onKeyDown={e => e.key === 'Enter' && e.metaKey && checkAnswer()}
-            placeholder="Une réponse par ligne…"
-            rows={3}
-            className="w-full px-4 py-3 rounded-xl outline-none mono text-sm resize-none transition-all duration-200"
-            style={{
-              background: bgColor,
-              border: `1px solid ${borderColor}`,
-              color: 'var(--text)',
-            }}
-          />
+          <>
+            <textarea
+              ref={textareaRef}
+              value={value}
+              onChange={e => {
+                setValue(e.target.value)
+                setStatus('idle')
+                autoGrow(e.target)
+              }}
+              onKeyDown={e => e.key === 'Enter' && e.metaKey && checkAnswer()}
+              placeholder="Une réponse par ligne — Cmd+Entrée pour valider"
+              rows={5}
+              className="w-full px-4 py-3 rounded-xl outline-none mono text-sm transition-all duration-200"
+              style={{
+                background: bgColor,
+                border: `1px solid ${borderColor}`,
+                color: 'var(--text)',
+                resize: 'vertical',
+                minHeight: '120px',
+                maxHeight: '360px',
+              }}
+            />
+            <p className="mono text-xs mt-1.5" style={{ color: 'rgba(255,255,255,0.18)' }}>
+              Entrée = nouvelle ligne · Cmd+Entrée = valider
+            </p>
+          </>
         ) : (
           <input
             type="text"
